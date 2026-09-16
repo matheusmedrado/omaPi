@@ -1,0 +1,47 @@
+{
+	"name": "pi-omapi",
+	"version": "0.1.0",
+	"description": "An 8-bit, omarchy-native face for pi: animated block logo, dense status strip, and hand-tuned themes.",
+	"keywords": [
+		"pi-package",
+		"pi",
+		"theme",
+		"tui",
+		"omarchy",
+		"8-bit"
+	],
+	"license": "MIT",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/matheusmedrado/omaPi.git"
+	},
+	"files": [
+		"extensions",
+		"src",
+		"themes",
+		"themed",
+		"README.md"
+	],
+	"pi": {
+		"extensions": [
+			"extensions/omapi.ts"
+		],
+		"themes": [
+			"themes"
+		]
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*",
+		"@earendil-works/pi-tui": "*"
+	},
+	"devDependencies": {
+		"@earendil-works/pi-coding-agent": "0.85.1",
+		"@earendil-works/pi-tui": "0.85.1",
+		"@types/node": "^24.13.5",
+		"typescript": "^5.9.3"
+	},
+	"scripts": {
+		"typecheck": "tsc --noEmit"
+	}
+}
