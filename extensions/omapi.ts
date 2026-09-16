@@ -6,10 +6,12 @@
  * step with the active omarchy theme.
  */
 
-import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { AutocompleteItem } from "@earendil-works/pi-tui";
+import { renderActivityRows } from "../src/activity.ts";
 import { type OmaPiConfig, loadConfig, saveConfig } from "../src/config.ts";
 import { createFooter } from "../src/footer.ts";
 import { OmaPiLogo } from "../src/logo.ts";
@@ -24,10 +26,18 @@ import {
 } from "../src/omarchy.ts";
 
 const PACKAGE_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
-const VERSION = "0.1.0";
+
+/** Read from package.json so the header cannot drift from the release. */
+const VERSION = ((): string => {
+	try {
+		return (JSON.parse(readFileSync(join(PACKAGE_ROOT, "package.json"), "utf8")) as { version?: string }).version ?? "0";
+	} catch {
+		return "0";
+	}
+})();
 const OMAPI_THEMES = ["omapi-famicom", "omapi-denshi", "omapi-washi"];
 
-const TOGGLES = ["header", "animate", "kana", "footer", "indicator", "followOmarchy"] as const;
+const TOGGLES = ["header", "animate", "kana", "footer", "indicator", "activity", "followOmarchy"] as const;
 type Toggle = (typeof TOGGLES)[number];
 
 /** True when this run was started with `pi --use-theme <name>`. */
@@ -39,6 +49,13 @@ export default function (pi: ExtensionAPI) {
 	let config = loadConfig();
 	let logo: OmaPiLogo | undefined;
 	let unwatch: (() => void) | undefined;
+
+	// Providers that run tools outside pi announce them as assistant text
+	// markers, which would otherwise render as a wall of JSON prose.
+	pi.registerMarkdownTransformer((markdown, { messageType, availableWidth }) => {
+		if (!config.activity || messageType !== "assistant") return markdown;
+		return renderActivityRows(markdown, availableWidth);
+	});
 
 	const applyTheme = (ctx: ExtensionContext): void => {
 		// `pi --use-theme <name>` is an explicit choice for this run; never

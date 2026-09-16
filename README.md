@@ -21,6 +21,7 @@ indicator, and colors immediately.
 | Header | pi logo and keybinding hints | Block mascot and pixel wordmark, revealed by a CRT boot sequence |
 | Footer | pi's default status line | Model, thinking level, git branch, context meter, omarchy theme, other extensions' statuses |
 | Working indicator | Spinner | Dither pulse (`░▒▓█`) |
+| Bridged tool calls | Raw JSON markers as prose | One-line activity rows with a colored gutter |
 | Colors | Whatever theme pi is set to | Three omaPi themes, or a live-tracked omarchy theme |
 
 ![omaPi](https://raw.githubusercontent.com/matheusmedrado/omaPi/main/docs/preview.png)
@@ -32,6 +33,33 @@ reflection row underneath. It plays on startup and on demand with `/omapi logo`.
 Every glyph used is a block or box-drawing character from the ranges every monospace font
 ships. No Nerd Font glyphs, no emoji, so nothing renders as a replacement box. The layout
 holds a constant height across all animation frames, so the transcript below it never jumps.
+
+## Activity rows
+
+Providers that execute tools outside pi — the Claude Code CLI bridge, for instance — cannot
+use pi's tool rendering, so they announce activity as plain assistant text:
+
+```
+[Claude Code · Bash #toolu_01abc {"command":"cd ~/omaPi && git branch -D backup-…]
+[Claude Code · result #toolu_01abc {"status":"ok","preview":"Deleted branch","length":1840}]
+```
+
+pi renders anything it cannot match as markdown, so that arrives as a wall of escaped JSON.
+omaPi rewrites each marker into a quoted one-liner instead:
+
+```
+> **Bash** `cd ~/omaPi && git branch -D backup-pre-author-fix`
+> └ ok · 1.8 kB
+```
+
+Which tool argument gets shown depends on the tool: the command for `Bash`, the path for
+`Read` and `Edit`, the pattern for `Grep` and `Glob`, the URL for `WebFetch`. The bridge
+truncates its argument preview at 120 characters, so that JSON is frequently invalid and is
+scraped rather than parsed; the result payload is complete JSON and is parsed. Lines that do
+not match the marker shape are passed through untouched.
+
+This is display-only — the underlying message is unchanged in the session and in model
+context. Turn it off with `/omapi activity off`.
 
 ## Themes
 
@@ -91,6 +119,7 @@ startup, overriding the theme saved in pi's settings. Turn it off with
 /omapi kana on|off            the katakana tagline
 /omapi footer on|off          the status strip
 /omapi indicator on|off       the dither working indicator
+/omapi activity on|off        compact rows for bridged tool calls
 /omapi followOmarchy on|off   omarchy theme tracking
 ```
 
@@ -105,6 +134,7 @@ Settings persist in `~/.config/omapi/config.json` and are written by the command
 | `kana` | `true` | Katakana tagline; needs a CJK fallback font |
 | `footer` | `true` | Replace pi's footer with the status strip |
 | `indicator` | `true` | Replace the streaming spinner |
+| `activity` | `true` | Rewrite bridged tool-call markers as activity rows |
 | `followOmarchy` | `true` | Track the active omarchy theme |
 | `theme` | unset | Pinned theme name; overrides `followOmarchy` |
 
@@ -130,6 +160,7 @@ bun install
 bun run typecheck
 bun run preview   # render the header and footer to stdout
 bun run frames    # dump every animation frame
+bun run activity  # rewrite sample tool-call markers
 ```
 
 The preview script renders the real components against a stand-in palette, so the logo can be

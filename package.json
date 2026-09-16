@@ -1,6 +1,6 @@
 {
 	"name": "pi-omapi",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "An 8-bit, omarchy-native face for pi: animated block logo, dense status strip, and hand-tuned themes.",
 	"keywords": [
 		"pi-package",
@@ -45,6 +45,7 @@
 	"scripts": {
 		"typecheck": "tsc --noEmit",
 		"preview": "bun scripts/preview.ts",
-		"frames": "bun scripts/preview.ts 80 --frames"
+		"frames": "bun scripts/preview.ts 80 --frames",
+		"activity": "bun scripts/activity.ts"
 	}
 }
