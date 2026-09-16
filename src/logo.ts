@@ -92,7 +92,8 @@ interface Tui {
 const SWEEP_FRAMES = 6;
 const ROW_DELAY = 2;
 const GLITCH_FRAMES = 2;
-const FRAME_MS = 45;
+/** Frame duration. Raise it via OMAPI_FRAME_MS to record the animation. */
+const FRAME_MS = Number(process.env.OMAPI_FRAME_MS) || 45;
 
 export class OmaPiLogo {
 	private frame = 0;

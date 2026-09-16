@@ -30,12 +30,20 @@ const OMAPI_THEMES = ["omapi-famicom", "omapi-denshi", "omapi-washi"];
 const TOGGLES = ["header", "animate", "kana", "footer", "indicator", "followOmarchy"] as const;
 type Toggle = (typeof TOGGLES)[number];
 
+/** True when this run was started with `pi --use-theme <name>`. */
+function usesCliTheme(): boolean {
+	return process.argv.some((argument) => argument === "--use-theme" || argument.startsWith("--use-theme="));
+}
+
 export default function (pi: ExtensionAPI) {
 	let config = loadConfig();
 	let logo: OmaPiLogo | undefined;
 	let unwatch: (() => void) | undefined;
 
 	const applyTheme = (ctx: ExtensionContext): void => {
+		// `pi --use-theme <name>` is an explicit choice for this run; never
+		// stomp it with the pinned or omarchy-derived theme.
+		if (usesCliTheme()) return;
 		const target = config.theme ?? (config.followOmarchy && isOmarchy() ? OMARCHY_THEME : undefined);
 		if (!target) return;
 		const known = ctx.ui.getAllThemes().some((theme) => theme.name === target);

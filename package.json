@@ -29,7 +29,8 @@
 		],
 		"themes": [
 			"themes"
-		]
+		],
+		"image": "https://raw.githubusercontent.com/matheusmedrado/omaPi/main/docs/preview.png"
 	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*",
@@ -42,6 +43,8 @@
 		"typescript": "^5.9.3"
 	},
 	"scripts": {
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"preview": "bun scripts/preview.ts",
+		"frames": "bun scripts/preview.ts 80 --frames"
 	}
 }
