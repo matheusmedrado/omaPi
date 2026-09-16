@@ -29,16 +29,6 @@ The boot sequence is four phases: a scanline sweep across the empty block, a ras
 materializes each row through a dither ramp, a two-frame glitch, then the settled mark with a
 reflection row underneath. It plays on startup and on demand with `/omapi logo`.
 
-```
-   █▌    █▌
-██████████████   ██████  ██  ██  ██████  ██████  ██████
-   ██    ██      ██  ██  ██████  ██  ██  ██  ██    ██
-   ██    ██      ██  ██  ██████  ██████  ██████    ██
-   ██    ██      ██  ██  ██  ██  ██  ██  ██        ██
-   ██    ██      ██████  ██  ██  ██  ██  ██      ██████
-   ▀▀    ▀▀      ▀▀▀▀▀▀  ▀▀  ▀▀  ▀▀  ▀▀  ▀▀      ▀▀▀▀▀▀
-```
-
 Every glyph used is a block or box-drawing character from the ranges every monospace font
 ships. No Nerd Font glyphs, no emoji, so nothing renders as a replacement box. The layout
 holds a constant height across all animation frames, so the transcript below it never jumps.
