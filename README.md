@@ -2,11 +2,11 @@
 
 An 8-bit, omarchy-native face for [pi](https://pi.dev).
 
-![omaPi booting](docs/boot.gif)
+![omaPi booting](https://raw.githubusercontent.com/matheusmedrado/omaPi/main/docs/boot.gif)
 
 The boot sequence above, captured from a real session with `scripts/capture.sh`. Still frame:
 
-![omaPi](docs/preview.png)
+![omaPi](https://raw.githubusercontent.com/matheusmedrado/omaPi/main/docs/preview.png)
 
 ```
    █▌    █▌
@@ -31,6 +31,8 @@ Everything is drawn with block and box-drawing glyphs that ship in every monospa
 ## Install
 
 ```bash
+pi install npm:pi-omapi
+# or straight from the repo
 pi install git:github.com/matheusmedrado/omaPi
 ```
 
@@ -110,7 +112,7 @@ bun run frames    # dump every animation frame
 `OMAPI_FRAME_MS` overrides the animation frame duration (default `45`), which is how the
 demo GIF above is recorded at a slower, capturable rate.
 
-Regenerate the screenshots (Hyprland + foot + grim + ffmpeg + magick):
+Regenerate the screenshots (Hyprland + kitty + grim + ffmpeg + magick):
 
 ```bash
 scripts/capture.sh [theme]   # writes docs/preview.png and docs/boot.gif
